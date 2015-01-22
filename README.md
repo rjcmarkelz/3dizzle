@@ -1,3 +1,3 @@
-# Readme for the 3D reconstruction project
+# Hacking project with 3D data
 
 ## Notes will be included here. 
