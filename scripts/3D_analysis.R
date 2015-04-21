@@ -91,8 +91,8 @@ str(ptcld2)
 ?plot
 plot(ptcld2$X, ptcld2$Y)
 
-XYplot <- ggplot(ptcld2, aes(x= X, y= Z, fill = brks)) + stat_binhex(bins = 50) 
-XYplot <- XYplot + guides(fill = FALSE)
+XYplot <- ggplot(ptcld2, aes(x= X, y= Y, fill = brks)) + stat_binhex(bins = 20) 
+XYplot <- XYplot + guides(fill = FALSE) +  theme_bw()
 XYplot
 ?stat_binhex
 ?geom_hex
