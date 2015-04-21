@@ -90,6 +90,8 @@ str(ptcloud)
 ?sample
 dim(ptcloud)
 
+plot3d(ptcloud)
+
 ptcloud2 <- ptcloud[sample(1:100, replace = FALSE), ]
 dim(ptcloud2)
 
