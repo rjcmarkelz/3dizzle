@@ -47,11 +47,6 @@ coneplant <- constructplant(coneplantQ, lfile = "LeafFile.l")
 plot(coneplant)
 
 
-testplant <- constructplant("PlantFiletest.p", "LeafFiletest.l")
-plot(testplant)
-summary(testplant)
-str(testplant)
-
 toona_fromabove <- projectplant(toona, azimuth=0, altitude=90)
 plot(toona_fromabove)
 ?constructplant
