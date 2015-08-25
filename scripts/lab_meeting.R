@@ -20,8 +20,8 @@ sunnyday <- setMet(laramie, month = 7, day = 12, nsteps = 12, Tmin = 12, Tmax = 
 plot(sunnyday)
 sunnyday
 
-brassica3$phy <- setPhy("lightresponse",leafpars=list(Amax=25, Rd=0.7, phi=0.045, theta=0.95, reflec=0.1, transmit=0.05))
-testrun <- YplantDay(brassica3, met = sunnyday, phy = brassica$phy)
+brassica$phy <- setPhy("lightresponse",leafpars=list(Amax=25, Rd=0.7, phi=0.045, theta=0.95, reflec=0.1, transmit=0.05))
+testrun <- YplantDay(brassica, met = sunnyday, phy = brassica$phy)
 
 brass_1 <- psrdata(testrun)
 brass_1
@@ -90,17 +90,37 @@ brassicastand <- makeStand(list(brassica,brassica,brassica3,brassica,brassica),
 plot(brassicastand)
 
 ?runYplant
+
+
+
+
 run_dir <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
 run_dir
 
-brassicastand <- makeStand(list(brassica,brassica,brassica3,brassica,brassica),
+brassicastand <- makeStand(list(brassica,brassica,brassica,brassica,brassica),
                        xyz=data.frame(x=c(-100,100,0,-100,100),
                                       y=c(-100,100,0,100,-100),
                                       z=c(0,0,0,0,0)))
 plot(brassicastand)
-short <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+
+brassicastand2 <- makeStand(list(brassica3,brassica3,brassica,brassica3,brassica3),
+                       xyz=data.frame(x=c(-200,200,0,-200,200),
+                                      y=c(-200,200,0,200,-200),
+                                      z=c(0,0,0,0,0)))
+plot(brassicastand2)
+uncrowded <- runYplant(brassicastand2, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+uncrowded
+
+
+brassicastand3 <- makeStand(list(brassica,brassica,brassica3,brassica,brassica),
+                       xyz=data.frame(x=c(-100,100,0,-100,100),
+                                      y=c(-100,100,0,100,-100),
+                                      z=c(0,0,0,0,0)))
+short <- runYplant(brassicastand3, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
 short
-shorttrans <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.5, intern = FALSE, rewriteplantfile = TRUE)
+
+
+shorttrans <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.7, intern = FALSE, rewriteplantfile = TRUE)
 shorttrans
 
 brassica4 <- constructplant("brassica_all_leaves_expanded.p", "br_sh_hn_leaves.l")
@@ -131,6 +151,10 @@ plot(intstand)
 intexpansion <- runYplant(intstand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
 intexpansion 
 
+uncrowded3 <- subset(uncrowded, plantnr ==3)
+dim(uncrowded3)
+uncrowded3$leaf <- 1:10
+
 run_dir
 run_dir3 <- subset(run_dir, plantnr == 3)
 run_dir3$leaf <- 1:10
@@ -156,8 +180,8 @@ intexpansion
 intexpansion3 <- subset(intexpansion, plantnr == 3)
 intexpansion3$leaf <- 1:10
 
-merged <- as.data.frame(cbind(run_dir3[,3],short3[,3],leafexpansion3[,3],leafintexpansion3[,3],intexpansion3[,3]))
-names(merged) <- c("Same", "Short", "LeafExp", "LeafIntExp","IntExp")
+merged <- as.data.frame(cbind(uncrowded3[,3],run_dir3[,3],short3[,3],leafexpansion3[,3],leafintexpansion3[,3],intexpansion3[,3]))
+names(merged) <- c("Uncrowded", "Same", "Short", "LeafExp", "LeafIntExp","IntExp")
 merged$leaf <- 1:10
 merged <- melt(merged, id.vars = "leaf")
 merged
@@ -165,8 +189,8 @@ merged
 #proper way
 heightPAR <- ggplot(merged) + 
   geom_line(aes(x = leaf, y = value, color = variable), size = 3) +
-  scale_colour_manual(values=c("red","black","blue","green", "purple"),
-  	name ="PAR", labels=c("Same Height", "Short", "Leaf Angle", "Angle + Internode", "Internode")) +
+  scale_colour_manual(values=c("black", "red", "orange","blue","green", "purple"),
+  	name ="PAR", labels=c("Uncrowded", "Same Height", "Short", "Leaf Angle", "Angle + Internode", "Internode")) +
   scale_x_discrete("leaf") +  xlab("Leaf Number") + ylab("PAR umol photons m-2 s-1") +
   theme(axis.title.x = element_text(face="bold", size=20),
            axis.text.x  = element_text(size=16),
@@ -175,18 +199,24 @@ heightPAR <- ggplot(merged) +
 heightPAR
 
 
-# hacky way
-# transPAR <- ggplot() + 
-#   geom_line(data = short3, aes(x = leaf, y = PARleaf), color = "black", size = 3) +
-#   geom_line(data = shorttrans3, aes(x = leaf, y = PARleaf), color = "red", size = 3) +
-#   xlab("Leaf") + ylab("Absorbed PAR (umol photons m-2 s-1)") +
-#   theme(axis.title.x = element_text(face="bold", size=20),
-#            axis.text.x  = element_text(size=16),
-#            axis.title.y = element_text(face="bold", size=20),
-#            axis.text.y  = element_text(size=16))
-# transPAR
+merged2 <- as.data.frame(cbind(short3[,3],shorttrans3[,3]))
+names(merged2) <- c("Trans = 0.1", "Trans = 0.5")
+merged2$leaf <- 1:10
+merged2 <- melt(merged2, id.vars = "leaf")
+merged2
 
+transPAR <- ggplot(merged2) + 
+  geom_line(aes(x = leaf, y = value, color = variable), size = 3) +
+  scale_colour_manual(values=c("red","black"),
+  	name ="PAR", labels=c("Trans = 0.1", "Trans = 0.5")) +
+  scale_x_discrete("leaf") +  xlab("Leaf Number") + ylab("PAR umol photons m-2 s-1") +
+  theme(axis.title.x = element_text(face="bold", size=20),
+           axis.text.x  = element_text(size=16),
+           axis.title.y = element_text(face="bold", size=20),
+           axis.text.y  = element_text(size=16))
+transPAR
 
+#hackyway
 # heightPAR <- ggplot() + 
 #   geom_line(data = run_dir3, aes(x = leaf, y = PARleaf), color = "red", size = 3) +
 #   geom_line(data = short3, aes(x = leaf, y = PARleaf), color = "black", size = 3) +
