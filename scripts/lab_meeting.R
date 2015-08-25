@@ -4,7 +4,75 @@ library(YplantQMC)
 setwd("/Users/Cody_2/git.repos/3D_reconstruction/data/Yplant")
 
 brassica <- constructplant("brassica_test6.p", "brassica_leaf_test.l")
+brassica2 <- constructplant("brassica_single.p", "LeafFiletest.l")
+brassica3 <- constructplant("brassica_all_leaves.p", "br_sh_hn_leaves.l")
 
+plot(brassica3)
+# individual plant
+plot(brassica)
+
+plot(brassica2)
+plot(brassica3)
+laramie <- setLocation(lat = 41.3167, long = -105.5833)
+plot(laramie)
+
+sunnyday <- setMet(laramie, month = 7, day = 12, nsteps = 12, Tmin = 12, Tmax = 28, PARday = 24)
+plot(sunnyday)
+sunnyday
+
+brassica3$phy <- setPhy("lightresponse",leafpars=list(Amax=25, Rd=0.7, phi=0.045, theta=0.95, reflec=0.1, transmit=0.05))
+testrun <- YplantDay(brassica3, met = sunnyday, phy = brassica$phy)
+
+brass_1 <- psrdata(testrun)
+brass_1
+plot(testrun)
+testrun
+brassica_fromabove <- projectplant(brassica3, azimuth=0, altitude=90)
+str(brassica_fromabove)
+plot(brassica_fromabove)
+
+summary(brassica)
+plot(brassica3, addcrownhull = TRUE)
+
+library(reshape2)
+library(ggplot2)
+brass_melt <- melt(brass_1, id.vars = "timeofday")
+brass_melt
+ggplot(brass_1, aes(timeofday, A)) + geom_line() + xlab("Hour of Day") + ylab("Assimilation (umol CO2 m-2 s-1)")
+ggplot(brass_1, aes(timeofday, LAproj)) + geom_line() + xlab("Hour of Day") + ylab("Leaf Area (m-2)")
+ggplot(brass_1, aes(timeofday, LAproj)) + geom_line() + xlab("Hour of Day") + ylab("Leaf Area (m-2)")
+head(brass_1)
+
+
+#PAR Plots
+head(brass_1)
+brass_melt <- brass_1[,c(1,2,4, 5, 6)]
+brass_melt <- melt(brass_melt, id = "timeofday")
+head(brass_melt)
+p <- ggplot(brass_melt) + 
+  geom_line(aes(x = timeofday, y = value, color = variable), size = 3) +
+  xlab("Hour of Day") + ylab("PAR umol photons m-2 s-1") +
+  scale_colour_manual(values=c("black","green","blue","red"),
+  	name ="PAR", labels=c("PAR Direct", "PAR Leaf", "PAR Diffuse", "PAR Total")) +
+  theme(axis.title.x = element_text(face="bold", size=20),
+           axis.text.x  = element_text(size=16),
+           axis.title.y = element_text(face="bold", size=20),
+           axis.text.y  = element_text(size=16))
+p
+
+A <- ggplot(data = brass_1, aes(x = timeofday, y = A)) + 
+  geom_line(color = "black", size = 3) +
+  xlab("Hour of Day") + ylab("Assimilation umol CO2 m-2 s-1") +
+  theme(axis.title.x = element_text(face="bold", size=20),
+           axis.text.x  = element_text(size=16),
+           axis.title.y = element_text(face="bold", size=20),
+           axis.text.y  = element_text(size=16))
+A
+head(brass_1)
+
+
+
+#stand
 br_stand <- makeStand(list(brassica, brassica, brassica),
                        xyz=data.frame(x=c(0,20,5),
                                       y=c(0,0,5),
@@ -14,13 +82,187 @@ brassicastand <- makeStand(list(brassica,brassica,brassica),
                                       y=c(0,0,5),
                                       z=c(0,0,0)))
 
-brassicastand <- makeStand(list(brassica,brassica,brassica,brassica,brassica),
-                       xyz=data.frame(x=c(-20,20,0,-20,20),
-                                      y=c(-20,20,0,20,-20),
+brassicastand <- makeStand(list(brassica,brassica,brassica3,brassica,brassica),
+                       xyz=data.frame(x=c(-100,100,0,-100,100),
+                                      y=c(-100,100,0,100,-100),
                                       z=c(0,0,0,0,0)))
 
 plot(brassicastand)
 
+?runYplant
+run_dir <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+run_dir
+
+brassicastand <- makeStand(list(brassica,brassica,brassica3,brassica,brassica),
+                       xyz=data.frame(x=c(-100,100,0,-100,100),
+                                      y=c(-100,100,0,100,-100),
+                                      z=c(0,0,0,0,0)))
+plot(brassicastand)
+short <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+short
+shorttrans <- runYplant(brassicastand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.5, intern = FALSE, rewriteplantfile = TRUE)
+shorttrans
+
+brassica4 <- constructplant("brassica_all_leaves_expanded.p", "br_sh_hn_leaves.l")
+plot(brassica4)
+leafstand <- makeStand(list(brassica,brassica,brassica4,brassica,brassica),
+                       xyz=data.frame(x=c(-100,100,0,-100,100),
+                                      y=c(-100,100,0,100,-100),
+                                      z=c(0,0,0,0,0)))
+plot(leafstand)
+leafexpansion <- runYplant(leafstand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+leafexpansion 
+
+brassica5 <- constructplant("brassica_all_leaves_internodes_expanded.p", "br_sh_hn_leaves.l")
+leafintstand <- makeStand(list(brassica,brassica,brassica5,brassica,brassica),
+                       xyz=data.frame(x=c(-100,100,0,-100,100),
+                                      y=c(-100,100,0,100,-100),
+                                      z=c(0,0,0,0,0)))
+plot(leafintstand)
+leafintexpansion <- runYplant(leafintstand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+leafintexpansion 
+
+brassica6 <- constructplant("brassica_internodes_expanded.p", "br_sh_hn_leaves.l")
+intstand <- makeStand(list(brassica,brassica,brassica6,brassica,brassica),
+                       xyz=data.frame(x=c(-100,100,0,-100,100),
+                                      y=c(-100,100,0,100,-100),
+                                      z=c(0,0,0,0,0)))
+plot(intstand)
+intexpansion <- runYplant(intstand, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+intexpansion 
+
+run_dir
+run_dir3 <- subset(run_dir, plantnr == 3)
+run_dir3$leaf <- 1:10
+
+short
+short3 <- subset(short, plantnr == 3)
+short3$leaf <- 1:10
+short
+
+shorttrans
+shorttrans3 <- subset(shorttrans, plantnr == 3)
+shorttrans3$leaf <- 1:10
+
+leafexpansion
+leafexpansion3 <- subset(leafexpansion, plantnr == 3)
+leafexpansion3$leaf <- 1:10
+
+leafintexpansion
+leafintexpansion3 <- subset(leafintexpansion, plantnr == 3)
+leafintexpansion3$leaf <- 1:10
+
+intexpansion
+intexpansion3 <- subset(intexpansion, plantnr == 3)
+intexpansion3$leaf <- 1:10
+
+merged <- as.data.frame(cbind(run_dir3[,3],short3[,3],leafexpansion3[,3],leafintexpansion3[,3],intexpansion3[,3]))
+names(merged) <- c("Same", "Short", "LeafExp", "LeafIntExp","IntExp")
+merged$leaf <- 1:10
+merged <- melt(merged, id.vars = "leaf")
+merged
+
+#proper way
+heightPAR <- ggplot(merged) + 
+  geom_line(aes(x = leaf, y = value, color = variable), size = 3) +
+  scale_colour_manual(values=c("red","black","blue","green", "purple"),
+  	name ="PAR", labels=c("Same Height", "Short", "Leaf Angle", "Angle + Internode", "Internode")) +
+  scale_x_discrete("leaf") +  xlab("Leaf Number") + ylab("PAR umol photons m-2 s-1") +
+  theme(axis.title.x = element_text(face="bold", size=20),
+           axis.text.x  = element_text(size=16),
+           axis.title.y = element_text(face="bold", size=20),
+           axis.text.y  = element_text(size=16))
+heightPAR
+
+
+# hacky way
+# transPAR <- ggplot() + 
+#   geom_line(data = short3, aes(x = leaf, y = PARleaf), color = "black", size = 3) +
+#   geom_line(data = shorttrans3, aes(x = leaf, y = PARleaf), color = "red", size = 3) +
+#   xlab("Leaf") + ylab("Absorbed PAR (umol photons m-2 s-1)") +
+#   theme(axis.title.x = element_text(face="bold", size=20),
+#            axis.text.x  = element_text(size=16),
+#            axis.title.y = element_text(face="bold", size=20),
+#            axis.text.y  = element_text(size=16))
+# transPAR
+
+
+# heightPAR <- ggplot() + 
+#   geom_line(data = run_dir3, aes(x = leaf, y = PARleaf), color = "red", size = 3) +
+#   geom_line(data = short3, aes(x = leaf, y = PARleaf), color = "black", size = 3) +
+#   geom_line(data = leafexpansion3, aes(x = leaf, y = PARleaf), color = "blue", size = 3) +
+#   geom_line(data = leafintexpansion3, aes(x = leaf, y = PARleaf), color = "green", size = 3) +
+#   geom_line(data = intexpansion3, aes(x = leaf, y = PARleaf), color = "purple", size = 3) +
+#   xlab("Leaf") + ylab("Absorbed PAR (umol photons m-2 s-1)") +
+#   theme(axis.title.x = element_text(face="bold", size=20),
+#            axis.text.x  = element_text(size=16),
+#            axis.title.y = element_text(face="bold", size=20),
+#            axis.text.y  = element_text(size=16))
+# heightPAR
+
+# heightPAR <- ggplot() + 
+#   geom_line(data = run_dir3, aes(x = leaf, y = PARleaf), color = "red", size = 3) +
+#   geom_line(data = short3, aes(x = leaf, y = PARleaf), color = "black", size = 3) +
+#   geom_line(data = leafexpansion3, aes(x = leaf, y = PARleaf), color = "blue", size = 3) +
+#   geom_line(data = leafintexpansion3, aes(x = leaf, y = PARleaf), color = "green", size = 3) +
+#   geom_line(data = intexpansion3, aes(x = leaf, y = PARleaf), color = "purple", size = 3) +
+#   ylab("Absorbed PAR (umol photons m-2 s-1)") +
+#   scale_colour_manual(name = 'the colour', 
+#          values =c('red'='red','black'='black', 'blue'='blue', 'green'='green', 'purple'='purple'),
+#           labels = c('c2','c1','c3','c4','c5')) +
+#   scale_x_discrete("leaf") +
+#   theme(axis.title.x = element_text(face="bold", size=20),
+#            axis.text.x  = element_text(size=16),
+#            axis.title.y = element_text(face="bold", size=20),
+#            axis.text.y  = element_text(size=16))
+# heightPAR
+
+
+
+
+
+
+
+  geom_line(data = run_dir3, aes(x = leaf, y = PARleaf), color = "black", size = 3) +
+
+#format leaf shapes
+leaffile <- as.data.frame(read.table("brassica_sh_hn2.txt", sep = "\t", header = TRUE))
+leaffile
+plot(leaffile[,1:2])
+leaffile <- split(leaffile,leaffile$leaf)
+leaf2 <- as.data.frame(leaffile[1])
+leaf2 <- as.data.frame(leaffile[2])
+leaf4 <- as.data.frame(leaffile[3])
+leaf4 <- as.data.frame(leaffile[4])
+leaf5 <- as.data.frame(leaffile[5])
+leaf6 <- as.data.frame(leaffile[6])
+leaf7 <- as.data.frame(leaffile[7])
+leaf8 <- as.data.frame(leaffile[8])
+leaf9 <- as.data.frame(leaffile[9])
+leaf1
+
+leaf9 <- leaf9[,-3]
+dim(leaf9)
+plot(leaf9)
+head(leaf9)
+leaf9 <- leaf9*25.4
+leaf9$X9.X <- leaf9$X9.X - leaf9[1,1]
+leaf9$X9.Y <- leaf9$X9.Y - leaf9[1,2]
+leaf9 
+plot(leaf9)
+C <- matrix(c(1,0,0,-1), nrow = 2, ncol = 2)
+test <- as.matrix(t(leaf9))
+test
+test <- t(C%*%test)
+test
+plot(test)
+write.table(test, "br_sh_hn_leaf9.txt", row.names = FALSE, col.names = TRUE)
+
+
+
+
+
+# various transformations and rotations of the leaf data in order to get 
 leaffile <- as.data.frame(read.table("new_leaf_outline.txt", sep = "\t", header = TRUE))
 test <- leaffile
 test[,1]
@@ -44,6 +286,10 @@ dim(test3)
 
 write.table(test3, "brassica_leaf_test.txt", row.names = FALSE, col.names = TRUE)
 test
+
+
+
+
 
 #######
 test <- as.data.frame(t(test))
@@ -125,6 +371,11 @@ theta <- pi/4
 theta
 theta <- 45*pi/180
 theta
+
+rotx <- min(test2[,1]) + (max(test2[,1]) - min(test2[,1]))/2 
+roty <- min(test2[,2]) + (max(test2[,2]) - min(test2[,2]))/2
+rotx
+roty
 
 R <- matrix(c(cos(theta), -sin(theta), sin(theta), cos(theta)), 2, 2)
 s <- as.matrix(test2 - center)
