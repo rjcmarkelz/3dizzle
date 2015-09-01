@@ -22,7 +22,7 @@ clidlrc <- setPhy("lightresponse",leafpars=list(Amax=8.5, Rd=0.7, phi=0.045, the
 YplantDay
 
 ?YplantDay
-maplerun <- YplantDay(sugarmaple, met = sunnyday, phy=clidlrc, hemi=largegap)
+maplerun <- YplantDay(sugarmaple, met = sunnyday, phy=clidlrc)
 head(maplerun)
 str(maplerun)
 ?randomplant
