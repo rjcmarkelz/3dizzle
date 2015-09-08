@@ -25,6 +25,20 @@ R500_UN_LN <- R500_CR_HN
 
 # field data
 
+R500_CR_LN[,20]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # phenotype data 
 setwd("/Users/Cody_2/git.repos/brassica_meta_analysis/Cleaned_data")
@@ -46,5 +60,16 @@ pheno[,c(1,136)]
 name <- as.character(pheno[1,1])
 str(name)
 colnames(pheno)
+
+# relative growth potential from field data
+# competition models for each
+# database
+# metabolic model?
+# 
+
+
+
+
+
 
 write.table(test, "test_plant.p", sep = "\t", row.names = FALSE)
