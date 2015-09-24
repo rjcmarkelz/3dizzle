@@ -7,9 +7,9 @@ library(ggplot2)
 setwd("/Users/Cody_2/git.repos/3D_reconstruction/data/Yplant")
 
 # ?constructplant
-# R93_CR_HN <- constructplant("R500_CR_HN.p", "br_sh_hn_leaves.l")
+R93_CR_HN <- constructplant("R500_CR_HN.p", "br_sh_hn_leaves.l")
 # str(R500_CR_HN)
-# plot(R500_CR_HN)
+plot(R93_CR_HN)
 
 # longleaf
 
@@ -18,7 +18,7 @@ setwd("/Users/Cody_2/git.repos/3D_reconstruction/data/Yplant")
 # plot(R500_CR_HN)
 
 R500_CR_HN <- readp(pfile = "R500_CR_HN.p")
-
+plot(R500_CR_HN)
 
 #elongate internodes
 R500_CR_HN[,7] <- c(0, 0, 0, 10, 20, 25, 30, 30, 30, 30, 15, 10, 5)

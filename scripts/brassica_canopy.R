@@ -7,7 +7,7 @@ plot(testplant)
 summary(testplant)
 str(testplant)
 
-test2 <- constructplant("brassica_test5.p", "LeafFiletest.l")
+brassica <- constructplant("brassica_test5.p", "LeafFiletest.l")
 plot(test2)
 summary(test2)
 str(test2)
@@ -24,4 +24,7 @@ testrun <- YplantDay(test2, met = sunnyday, phy = test2$phy)
 psrdata(testrun)
 plot(testrun)
 
-
+br_stand <- makeStand(list(brassica, brassica, brassica, brassica, brassica),
+                       xyz=data.frame(x=c(0,20,5),
+                                      y=c(0,0,5),
+                                      z=c(0,0,0)))
