@@ -32,7 +32,8 @@ str(brassica_fromabove)
 plot(brassica_fromabove)
 
 summary(brassica)
-plot(brassica3, addcrownhull = TRUE)
+plot(brassica, addcrownhull = TRUE)
+plot(brassica)
 
 library(reshape2)
 library(ggplot2)
@@ -53,7 +54,7 @@ p <- ggplot(brass_melt) +
   geom_line(aes(x = timeofday, y = value, color = variable), size = 3) +
   xlab("Hour of Day") + ylab("PAR umol photons m-2 s-1") +
   scale_colour_manual(values=c("black","green","blue","red"),
-  	name ="PAR", labels=c("PAR Direct", "PAR Leaf", "PAR Diffuse", "PAR Total")) +
+  	name ="PAR", labels=c("PAR Total", "PAR Direct", "PAR Leaf", "PAR Diffuse")) +
   theme(axis.title.x = element_text(face="bold", size=20),
            axis.text.x  = element_text(size=16),
            axis.title.y = element_text(face="bold", size=20),
