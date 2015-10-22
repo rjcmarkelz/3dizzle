@@ -465,6 +465,17 @@ R93_LA_plot <- ggplot(R93_melt, aes(x = leaf, y = value, group = plantnr, color 
         panel.grid.minor = element_blank())
 R93_LA_plot
 
+setwd("~/git.repos/brassica_field_2014_gh/output/")
+ggsave("modeled_sunlit_leaf_area.pdf", width = 8, height = 8)
+# see also Brassica_2014_second_timepoint.R
+library(cowplot)
+?plot_grid
+figure_X <- plot_grid(R93_LA_plot, fruits_2_plot, ncol = 1)
+figure_X
+ggsave("joint_model_pod_figure.pdf", figure_X, height = 15, width = 10)
+
+
+
 
 gg_color_hue <- function(n) {
   hues = seq(15, 375, length=n+1)
