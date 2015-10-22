@@ -11,6 +11,9 @@ R93_CR_HN <- constructplant("R500_CR_HN.p", "br_sh_hn_leaves.l")
 # str(R500_CR_HN)
 plot(R93_CR_HN)
 
+test <- runYplant(R93_CR_HN)
+test
+
 # longleaf
 
 # R500_CR_HN$leafdata$area <-  1
@@ -23,7 +26,8 @@ plot(R500_CR_HN)
 #elongate internodes
 R500_CR_HN[,7] <- c(0, 0, 0, 10, 20, 25, 30, 30, 30, 30, 15, 10, 5)
 
-#same basic shape for all treatments for now
+# same basic shape for all treatments for now
+# very substaintially based on treatment, but need to constrain
 R500_CR_LN <- R500_CR_HN
 R500_UN_HN <- R500_CR_HN
 R500_UN_LN <- R500_CR_HN
@@ -34,6 +38,7 @@ IMB211_UN_HN <- R500_CR_HN
 IMB211_UN_LN <- R500_CR_HN
 
 # field data
+# use field data as parameters for leaf length
 x <- 175
 R500_UN_HN[,20] <- c(0, 0, 0, (x*.15), (x*.15), (x*.5), (x*.75), (x*.75), x, (x*.75), (x*.45), (x*.25), (x*.15))
 R500_UN_HN
@@ -89,8 +94,37 @@ R500_stand_UN_HN <- makeStand(list(R500_UN_HN_plant,R500_UN_HN_plant,R500_UN_HN_
                        xyz=data.frame(x=c(-200,200,0,-200,200),
                                       y=c(-200,200,0,200,-200),
                                       z=c(0,0,0,0,0)))
+plot(R500_stand_UN_HN)
+# make large stand with all plants
+R500_stand_total <- makeStand(list(R500_UN_HN_plant,R500_UN_HN_plant,R500_UN_HN_plant,R500_UN_HN_plant,R500_UN_HN_plant,
+                                   R500_UN_LN_plant,R500_UN_LN_plant,R500_UN_LN_plant,R500_UN_LN_plant,R500_UN_LN_plant,
+                                   R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant
+                                   #R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant),
+                                   ),
+                       xyz=data.frame(x=c(-200,200,0,-200,200, 600,600,800,1000,1000, -50,50,0,-50,50),
+                                      y=c(-200,200,0,200,-200, 200,-200,0,200,-200,   -650,-550,-600,-550,-650),
+                                      z=c(0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0)))
+plot(R500_stand_total)
+
+#please pardon the terrible formatting
+R500_stand_total <- makeStand(list(R500_UN_HN_plant,
+                                   R500_UN_LN_plant,
+                                   R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,
+                                   R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant),
+                       xyz=data.frame(x=c(0,350, -50,50,0,-50,50,          300,400,350,300,400),
+                                      y=c(0,0,   -400,-300,-350,-300,-400, -300,-300,-350,-400,-400),
+                                      z=c(0,0, 0,0,0,0,0, 0,0,0,0,0)))
+plot(R500_stand_total)
 
 
+R500_stand_total <- makeStand(list(R500_UN_HN_plant,
+                                   R500_UN_LN_plant,
+                                   R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,
+                                   R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant),
+                       xyz=data.frame(x=c(0,350, -50,50,0,-50,50,          300,400,350,300,400),
+                                      y=c(0,0,   -400,-300,-350,-300,-400, -300,-300,-350,-400,-400),
+                                      z=c(0,0, 0,0,0,0,0, 0,0,0,0,0)))
+plot(R500_stand_total)
 plot(R500_stand_UN_LN)
 
 R500_stand_CR_HN_sim <- runYplant(R500_stand_CR_HN, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
@@ -230,6 +264,7 @@ R93_stand_UN_HN <- makeStand(list(R93_UN_HN_plant,R93_UN_HN_plant,R93_UN_HN_plan
                                       z=c(0,0,0,0,0)))
 
 
+
 plot(R93_stand_UN_LN)
 
 R93_stand_CR_HN_sim <- runYplant(R93_stand_CR_HN, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
@@ -238,7 +273,7 @@ R93_stand_UN_HN_sim <- runYplant(R93_stand_UN_HN, fbeam=1, altitude=90, azimuth=
 R93_stand_UN_LN_sim <- runYplant(R93_stand_UN_LN, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
 
 R93_stand_CR_HN_sim
-R93_stand_CR_HN_sim3 <- subset(R93_stand_CR_HN_sim, plantnr == 3)
+R93_stand_CR_HN_sim3 <- subset(R93_stand_CR_HN_sim, plantnr = 3)
 R93_stand_CR_HN_sim3$leaf <- 1:10
 
 R93_stand_CR_LN_sim
@@ -363,3 +398,81 @@ sqrt(2000)
 
 
 write.table(test, "test_plant.p", sep = "\t", row.names = FALSE)
+
+##########
+# GxE Stand
+##########
+R500_stand_total <- makeStand(list(R500_UN_HN_plant,
+                                   R500_UN_LN_plant,
+                                   R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,R500_CR_HN_plant,
+                                   R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant,R500_CR_LN_plant),
+                       xyz=data.frame(x=c(0,350, -50,50,0,-50,50,          300,400,350,300,400),
+                                      y=c(0,0,   -400,-300,-350,-300,-400, -300,-300,-350,-400,-400),
+                                      z=c(0,0, 0,0,0,0,0, 0,0,0,0,0)))
+plot(R500_stand_total)
+
+
+
+R93_stand_total <- makeStand(list(R93_UN_HN_plant,
+                                   R93_UN_LN_plant,
+                                   R93_CR_HN_plant,R93_CR_HN_plant,R93_CR_HN_plant,R93_CR_HN_plant,R93_CR_HN_plant,
+                                   R93_CR_LN_plant,R93_CR_LN_plant,R93_CR_LN_plant,R93_CR_LN_plant,R93_CR_LN_plant),
+                       xyz=data.frame(x=c(0,350, -50,50,0,-50,50,          300,400,350,300,400),
+                                      y=c(0,0,   -400,-300,-350,-300,-400, -300,-300,-350,-400,-400),
+                                      z=c(0,0, 0,0,0,0,0, 0,0,0,0,0)))
+plot(R93_stand_total)
+
+R93_stand_total_Y <- runYplant(R93_stand_total, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
+R93_stand_total_Y
+
+#subset only leaves we are intersted in
+plantid <- c(1,2,5,10)
+R93_stand_total_Y3 <- R93_stand_total_Y[R93_stand_total_Y$plantnr %in% plantid,]
+
+R93_stand_total_Y3
+R93_stand_total_Y3$leaf <- 1:10
+R93_stand_total_Y3
+str(R93_stand_total_Y3)
+dim(R93_stand_total_Y3)
+R93_stand_total_Y3$leaf <- as.factor(R93_stand_total_Y3$leaf)
+R93_stand_total_Y3$plantnr <- as.factor(R93_stand_total_Y3$plantnr)
+
+R93_melt <- R93_stand_total_Y3[10:12]
+str(R93_melt)
+
+?melt
+
+R93_melt <- melt(R93_melt, id.vars = c("leaf", "plantnr"))
+R93_melt[3] <- R93_melt[3]/1e+06
+R93_melt$value <- R93_melt$value/1e+06
+
+R93_melt$plantnr
+
+R93_LA_plot <- ggplot(R93_melt, aes(x = leaf, y = value, group = plantnr, color = plantnr)) + 
+  geom_line(size = 3) +
+  scale_colour_manual(values = cols, name ="Treatment", labels=c("UN_High", "UN_Low", "CR_High", "CR_Low")) +
+  ylab(expression(bold(paste(Modeled~Direct~Sunlit~Leaf~Area,~(m^2))))) +
+  xlab("Leaf Number in Canopy") +
+  theme_bw() +
+  theme(axis.title.x = element_text(face="bold", size=20),
+        axis.text.x  = element_text(face="bold", size=16),
+        axis.title.y = element_text(face="bold", size=20),
+        axis.text.y  = element_text(face="bold", size=16),
+        legend.title = element_blank(),
+        legend.position = c(0.15, 0.9), 
+        legend.text = element_text(size=14, face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+R93_LA_plot
+
+
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length=n+1)
+  hcl(h=hues, l=65, c=100)[1:n]
+}
+
+n = 4
+cols = gg_color_hue(4)
+cols
+dev.new(width=15, height=15)
+plot(1:n, pch=16, cex=10, col=cols)
