@@ -454,13 +454,13 @@ R93_LA_plot <- ggplot(R93_melt, aes(x = leaf, y = value, group = plantnr, color 
   ylab(expression(bold(paste(Modeled~Direct~Sunlit~Leaf~Area,~(m^2))))) +
   xlab("Leaf Number in Canopy") +
   theme_bw() +
-  theme(axis.title.x = element_text(face="bold", size=20),
-        axis.text.x  = element_text(face="bold", size=16),
-        axis.title.y = element_text(face="bold", size=20),
-        axis.text.y  = element_text(face="bold", size=16),
+  theme(axis.title.x = element_text(face="bold", size=26),
+        axis.text.x  = element_text(face="bold", size=22),
+        axis.title.y = element_text(face="bold", size=26),
+        axis.text.y  = element_text(face="bold", size=22),
         legend.title = element_blank(),
         legend.position = c(0.15, 0.9), 
-        legend.text = element_text(size=14, face="bold"),
+        legend.text = element_text(size=20, face="bold"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
 R93_LA_plot
@@ -472,7 +472,7 @@ library(cowplot)
 ?plot_grid
 figure_X <- plot_grid(R93_LA_plot, fruits_2_plot, ncol = 1)
 figure_X
-ggsave("joint_model_pod_figure.pdf", figure_X, height = 15, width = 10)
+ggsave("joint_model_pod_figure.pdf", figure_X, height = 20, width = 15)
 
 
 
