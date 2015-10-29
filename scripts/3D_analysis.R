@@ -91,14 +91,47 @@ str(ptcld2)
 ?plot
 plot(ptcld2$X, ptcld2$Y)
 
-XYplot <- ggplot(ptcld2, aes(x= X, y= Y, fill = brks)) + stat_binhex(bins = 20) 
+XYplot <- ggplot(ptcld2, aes(x= X, y= Y, fill = brks)) + stat_binhex(bins = 50) 
 XYplot <- XYplot + guides(fill = FALSE) +  theme_bw()
 XYplot
 ?stat_binhex
 ?geom_hex
 
+XYplot <- ggplot(ptcld2, aes(x= X, y= Y, fill = brks)) + stat_binhex(bins = 20) +
+          ylab("Y") +
+          xlab("X") +
+          guides(fill = FALSE) +
+          theme_bw() +
+          scale_y_continuous(breaks=NULL) +
+          scale_x_continuous(breaks=NULL) +
+        theme(axis.title.x = element_text(face="bold", size=40),
+              axis.text.x  = element_blank(),
+              axis.title.y = element_text(face="bold", size=40),
+              axis.text.y  = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank())
+XYplot
 
+setwd("~/git.repos/brassica_field_2014_gh/output/")
+ggsave("XY_plot.pdf", width = 15, height = 15)
 
+XZplot <- ggplot(ptcld2, aes(x= X, y= Z, fill = brks)) + stat_binhex(bins = 82) +
+          ylab("Z") +
+          xlab("Y") +
+          guides(fill = FALSE) +
+          theme_bw() +
+          scale_y_continuous(breaks=NULL) +
+          scale_x_continuous(breaks=NULL) +
+        theme(axis.title.x = element_text(face="bold", size=60),
+              axis.text.x  = element_blank(),
+              axis.title.y = element_text(face="bold", size=60),
+              axis.text.y  = element_blank(),
+              panel.grid.major = element_blank(),
+              panel.grid.minor = element_blank())
+XZplot
+
+setwd("~/git.repos/brassica_field_2014_gh/output/")
+ggsave("XZ_plot.pdf", width = 8, height = 15)
 
 # other play to rotate the point cloud etc.
 # ptcld2 <- ptcld
