@@ -413,6 +413,8 @@ plot(R500_stand_total)
 
 
 
+# final stand figure for research proposal
+# change the angle of the screen capture to make plants appear more 3D
 R93_stand_total <- makeStand(list(R93_UN_HN_plant,
                                    R93_UN_LN_plant,
                                    R93_CR_HN_plant,R93_CR_HN_plant,R93_CR_HN_plant,R93_CR_HN_plant,R93_CR_HN_plant,
@@ -421,6 +423,8 @@ R93_stand_total <- makeStand(list(R93_UN_HN_plant,
                                       y=c(0,0,   -400,-300,-350,-300,-400, -300,-300,-350,-400,-400),
                                       z=c(0,0, 0,0,0,0,0, 0,0,0,0,0)))
 plot(R93_stand_total)
+
+
 
 R93_stand_total_Y <- runYplant(R93_stand_total, fbeam=1, altitude=90, azimuth=0, reflec=0.15, transmit=0.1, intern = FALSE, rewriteplantfile = TRUE)
 R93_stand_total_Y
